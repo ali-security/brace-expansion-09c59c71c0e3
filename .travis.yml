@@ -1,7 +1,17 @@
 sudo: false
+dist: focal
 language: node_js
 node_js:
+  - "24"
   - "0.12"
   - "4"
   - "6"
   - "7"
+script:
+  - |
+    NODE_MAJOR=$(node -e 'console.log(process.versions.node.split(".")[0])')
+    if [ "$NODE_MAJOR" -ge 22 ]; then
+      npm test
+    else
+      ./node_modules/.bin/tape $(ls test/*.js | grep -v '/redos\.js$')
+    fi
